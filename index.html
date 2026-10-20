@@ -139,15 +139,15 @@ h2 { font-size: clamp(20px, 3vw, 26px); letter-spacing: -.02em; margin: 0; }
 .tblink.f { animation-delay: 1.2s; }
 @keyframes tblink { 0%, 40% { opacity: 1; } 41%, 100% { opacity: .25; } }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; gap: 20px; }
-.steps li { counter-increment: step; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 44px 1fr; gap: 6px 16px; align-items: start; }
 .steps li::before {
   content: "0" counter(step); color: var(--mint); font-weight: 700;
   border: 1px solid var(--line); border-radius: 8px; text-align: center; padding: 8px 0;
   transition: background .3s, color .3s, transform .3s var(--spring);
 }
 .steps li:hover::before { background: var(--mint); color: var(--navy-2); transform: scale(1.1) rotate(-3deg); }
-.steps h3 { margin: 0 0 4px; font-size: 15px; }
-.steps p { margin: 0; color: var(--muted); font-size: 13px; }
+.steps h3 { margin: 0; font-size: 15px; align-self: center; }
+.steps p { margin: 0; color: var(--muted); font-size: 13px; grid-column: 2; }
 code { color: var(--mint); background: var(--navy-2); padding: 1px 6px; border-radius: 4px; font-size: .9em; }
 /* closing cta */
 .closing { text-align: center; padding: 64px 0; border-top: 1px solid var(--line); }
@@ -162,6 +162,7 @@ footer a:hover { color: var(--mint); }
   .duet { grid-template-columns: 1fr; }
   .frow { grid-template-columns: 1fr; gap: 20px; }
   .frow.flip .ftext { order: 0; }
+  .steps li { grid-template-columns: 36px 1fr; gap: 4px 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -362,7 +363,7 @@ footer a:hover { color: var(--mint); }
 
   <div class="closing rv">
     <p>Gratis. Tanpa akun. Tanpa telemetri. Cuma kamu, API, dan Aoi.</p>
-    <a class="cta" href="#download">Unduh untuk Windows ↓</a>
+    <a class="cta" href="dl/flowhit-pixel-windows.zip">Unduh untuk Windows ↓</a>
   </div>
 </main>
 
