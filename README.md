@@ -3,7 +3,7 @@
 API client Windows gratis + maskot yang ikut panik saat request error.
 
 🌐 **Live:** https://one-d-plate.github.io/flowhit-pixel/
-⬇️ **Unduh:** [flowhit-pixel-windows.zip](https://one-d-plate.github.io/flowhit-pixel/dl/flowhit-pixel-windows.zip) (~7 MB, butuh WebView2 bawaan Windows 10/11)
+⬇️ **Unduh:** [FLOWHIT-PIXEL-Setup-2.4.0.exe](https://one-d-plate.github.io/flowhit-pixel/dl/FLOWHIT-PIXEL-Setup-2.4.0.exe) (installer ~7 MB, tanpa admin) · alternatif portable: [flowhit-pixel-windows.zip](https://one-d-plate.github.io/flowhit-pixel/dl/flowhit-pixel-windows.zip)
 
 ## Isi repo
 
