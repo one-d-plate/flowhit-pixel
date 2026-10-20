@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLOWHIT PIXEL — API client Windows gratis</title>
+<meta name="description" content="Rangkai request. Jalankan alurnya. API client Windows gratis + maskot yang ikut panik saat request error.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1c1928;
+  --navy-2: #141020;
+  --text: #e8e6f0;
+  --muted: #8f8ba3;
+  --mint: #58d6b5;
+  --line: #2e2a45;
+  --font: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --spring: cubic-bezier(.34, 1.4, .4, 1);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--navy);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+a { color: var(--mint); }
+::selection { background: var(--mint); color: var(--navy-2); }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+/* progress + dust */
+#progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--mint); z-index: 50; }
+#dust { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .55; }
+/* reveal */
+.rv { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .8s var(--spring); transition-delay: var(--d, 0s); }
+.rv.in { opacity: 1; transform: none; }
+/* nav */
+.nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 0; border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; letter-spacing: .06em; }
+.brand span { color: var(--mint); }
+.brand .cursor { color: var(--mint); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.nav a.dl {
+  text-decoration: none; border: 1px solid var(--mint); padding: 6px 14px; border-radius: 6px;
+  font-size: 13px; transition: background .25s, color .25s, transform .25s var(--spring);
+}
+.nav a.dl:hover { background: var(--mint); color: var(--navy-2); transform: scale(1.06); }
+/* hero — centered giant */
+.hero { text-align: center; padding: 72px 0 8px; max-width: 840px; margin: 0 auto; }
+.eyebrow { color: var(--mint); font-size: 12px; letter-spacing: .28em; margin: 0 0 14px; }
+h1 { font-size: clamp(44px, 9vw, 84px); line-height: 1; margin: 0 0 14px; letter-spacing: -.03em; }
+h1 .glow { color: var(--mint); text-shadow: 0 0 32px rgba(88,214,181,.45); }
+.sub { font-size: clamp(16px, 2.6vw, 20px); margin: 0 0 8px; min-height: 1.7em; }
+.sub .typed-caret { color: var(--mint); animation: blink 1s steps(1) infinite; }
+.small { color: var(--muted); font-size: 13px; margin: 0 0 28px; }
+.cta {
+  display: inline-block; background: var(--mint); color: var(--navy-2);
+  font-weight: 700; text-decoration: none; padding: 14px 30px; border-radius: 8px;
+  position: relative; overflow: hidden; transition: transform .25s var(--spring);
+}
+.cta:hover { transform: translateY(-3px) scale(1.03); }
+.cta::after {
+  content: ""; position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent);
+  transform: skewX(-20deg); animation: shine 3.2s ease-in-out infinite;
+}
+@keyframes shine { 0%, 60% { left: -80%; } 100% { left: 180%; } }
+.requirements { color: var(--muted); font-size: 12px; margin: 12px 0 0; }
+/* living flow strip */
+.flowstrip { margin: 36px auto 0; max-width: 660px; }
+.flowstrip svg { width: 100%; height: auto; display: block; overflow: visible; }
+.fnode { fill: var(--navy-2); stroke: var(--line); stroke-width: 1.5; }
+.fnode.hot { stroke: var(--mint); filter: drop-shadow(0 0 8px rgba(88,214,181,.5)); }
+.flabel { fill: var(--text); font-size: 13px; font-family: var(--font); font-weight: 700; }
+.fsub { fill: var(--muted); font-size: 10px; font-family: var(--font); }
+.fwire { fill: none; stroke: var(--mint); stroke-width: 2; opacity: .85; }
+.fwire.back { opacity: .35; stroke-dasharray: 5 4; animation: dashmove 1s linear infinite; }
+@keyframes dashmove { to { stroke-dashoffset: -9; } }
+.fdot { fill: var(--mint); filter: drop-shadow(0 0 6px rgba(88,214,181,.9)); }
+.flowcap { color: var(--muted); font-size: 12px; margin: 10px 0 0; min-height: 1.7em; }
+.flowcap .ok { color: var(--mint); }
+/* duet: mascot + app */
+.duet { display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: center; margin: 36px 0 8px; }
+/* mascot */
+.mascot { margin: 0; text-align: center; animation: floaty 5s ease-in-out infinite; }
+@keyframes floaty { 50% { transform: translateY(-10px); } }
+.mascot .speech {
+  color: var(--mint); font-size: 13px; margin: 0 0 8px; min-height: 2.2em;
+  transition: opacity .3s;
+}
+.mascot img { width: 100%; max-width: 300px; border-radius: 12px; border: 1px solid var(--line); display: block; margin: 0 auto; transition: transform .3s var(--spring), box-shadow .3s; }
+.mascot img:hover { transform: scale(1.04) rotate(-1deg); box-shadow: 0 0 40px rgba(88,214,181,.25); }
+.mascot figcaption { color: var(--muted); font-size: 11px; letter-spacing: .14em; margin-top: 8px; }
+/* marquee */
+.marquee { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; white-space: nowrap; padding: 10px 0; color: var(--muted); font-size: 12px; letter-spacing: .2em; }
+.marquee .track { display: inline-block; animation: slide 22s linear infinite; }
+.marquee b { color: var(--mint); font-weight: 400; }
+@keyframes slide { to { transform: translateX(-50%); } }
+/* app shot */
+.app-shot { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--navy-2); transition: transform .35s var(--spring), box-shadow .35s; }
+.app-shot:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+.app-shot figcaption {
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 10px 14px; font-size: 12px; color: var(--muted); border-bottom: 1px solid #28233a;
+}
+.app-shot .rec { color: var(--mint); animation: blink 1.4s steps(1) infinite; }
+.app-shot img { display: block; width: 100%; }
+/* sections */
+.section { padding: 56px 0; border-top: 1px solid var(--line); }
+.section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-bottom: 32px; }
+h2 { font-size: clamp(20px, 3vw, 26px); letter-spacing: -.02em; margin: 0; }
+.section-number { color: var(--mint); font-size: 11px; white-space: nowrap; letter-spacing: .14em; }
+.features { display: grid; gap: 0; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; padding: 30px 0; border-top: 1px solid var(--line); }
+.frow:first-child { border-top: 0; padding-top: 4px; }
+.frow.flip .ftext { order: 2; }
+.feature-label { color: var(--mint); font-size: 11px; letter-spacing: .14em; }
+.ftext h3 { margin: 8px 0; font-size: clamp(18px, 2.6vw, 22px); letter-spacing: -.01em; }
+.ftext p { color: var(--muted); font-size: 13px; margin: 0; }
+.demo { background: var(--navy-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px; transition: transform .35s var(--spring), box-shadow .35s; }
+.demo:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+.demo svg { width: 100%; height: auto; display: block; overflow: visible; }
+.demo .dtitle { font-size: 11px; letter-spacing: .14em; color: var(--mint); margin: 0 0 10px; }
+.demo .dlog { font-size: 12px; color: var(--muted); margin: 10px 0 0; min-height: 1.7em; }
+.demo .dlog .ok { color: var(--mint); }
+.qbar { height: 10px; background: #0a0d18; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.qfill { height: 100%; width: 33%; background: var(--mint); border-radius: 6px; transition: width 1s ease; }
+.badge { display: inline-block; border: 1px solid var(--mint); color: var(--mint); border-radius: 20px; padding: 4px 12px; font-size: 12px; margin-top: 12px; opacity: 0; transform: scale(.8); transition: opacity .4s var(--spring), transform .4s var(--spring); }
+.badge.show { opacity: 1; transform: scale(1); }
+.tblink { animation: tblink 2.4s steps(1) infinite; }
+.tblink.f { animation-delay: 1.2s; }
+@keyframes tblink { 0%, 40% { opacity: 1; } 41%, 100% { opacity: .25; } }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; gap: 20px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+.steps li::before {
+  content: "0" counter(step); color: var(--mint); font-weight: 700;
+  border: 1px solid var(--line); border-radius: 8px; text-align: center; padding: 8px 0;
+  transition: background .3s, color .3s, transform .3s var(--spring);
+}
+.steps li:hover::before { background: var(--mint); color: var(--navy-2); transform: scale(1.1) rotate(-3deg); }
+.steps h3 { margin: 0 0 4px; font-size: 15px; }
+.steps p { margin: 0; color: var(--muted); font-size: 13px; }
+code { color: var(--mint); background: var(--navy-2); padding: 1px 6px; border-radius: 4px; font-size: .9em; }
+/* closing cta */
+.closing { text-align: center; padding: 64px 0; border-top: 1px solid var(--line); }
+.closing p { color: var(--muted); font-size: 13px; margin: 0 0 20px; }
+/* footer */
+footer { border-top: 1px solid var(--line); padding: 24px 0 40px; color: var(--muted); font-size: 12px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { color: var(--muted); text-decoration: none; margin-left: 16px; }
+footer a:hover { color: var(--mint); }
+@media (max-width: 720px) {
+  .hero { padding: 48px 0 8px; }
+  .duet { grid-template-columns: 1fr; }
+  .frow { grid-template-columns: 1fr; gap: 20px; }
+  .frow.flip .ftext { order: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="dust" aria-hidden="true"></canvas>
+<div id="progress" aria-hidden="true"></div>
+
+<header class="wrap nav">
+  <div class="brand">FLOWHIT <span>PIXEL</span><span class="cursor">_</span></div>
+  <a class="dl" href="#download">Unduh</a>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <p class="eyebrow rv">API CLIENT WINDOWS / GRATIS</p>
+    <h1 class="rv" style="--d:.08s">FLOWHIT <span class="glow">PIXEL</span></h1>
+    <p class="sub rv" style="--d:.16s"><span id="typed"></span><span class="typed-caret">▌</span></p>
+    <p class="small rv" style="--d:.24s">API client Windows gratis + maskot yang ikut panik saat request error.</p>
+    <div class="rv" style="--d:.32s">
+      <a class="cta" id="download" href="#download">
+        Unduh untuk Windows <span aria-hidden="true">↓</span>
+      </a>
+      <p class="requirements">~10 MB · Rust + WebView2 · UI bahasa Indonesia</p>
+    </div>
+
+    <div class="flowstrip rv" style="--d:.4s" aria-label="Animasi alur: paket bolak-balik START - REQUEST - END">
+      <svg viewBox="0 0 660 150" role="img" aria-hidden="true">
+        <path class="fwire" d="M 105 62 H 265" />
+        <path class="fwire" d="M 395 62 H 555" />
+        <path class="fwire back" d="M 555 88 H 395" />
+        <path class="fwire back" d="M 265 88 H 105" />
+        <g id="fn-start">
+          <rect class="fnode" x="20" y="40" width="85" height="44" rx="10" />
+          <text class="flabel" x="62" y="58" text-anchor="middle">START</text>
+          <text class="fsub" x="62" y="73" text-anchor="middle">mulai</text>
+        </g>
+        <g id="fn-req">
+          <rect class="fnode" x="265" y="40" width="130" height="44" rx="10" />
+          <text class="flabel" x="330" y="58" text-anchor="middle">REQUEST</text>
+          <text class="fsub" x="330" y="73" text-anchor="middle">POST → 200 ✓</text>
+        </g>
+        <g id="fn-end">
+          <rect class="fnode" x="555" y="40" width="85" height="44" rx="10" />
+          <text class="flabel" x="597" y="58" text-anchor="middle">END</text>
+          <text class="fsub" x="597" y="73" text-anchor="middle">selesai</text>
+        </g>
+        <circle class="fdot" r="5" cx="0" cy="0">
+          <animateMotion dur="3.6s" repeatCount="indefinite" path="M 105 62 H 555" />
+        </circle>
+        <circle class="fdot" r="4" cx="0" cy="0" opacity=".7">
+          <animateMotion dur="3.6s" begin="-1.8s" repeatCount="indefinite" path="M 555 88 H 105" />
+        </circle>
+      </svg>
+      <p class="flowcap" id="flowcap" aria-live="polite">paket berangkat → <span class="ok">respons pulang ✓</span></p>
+    </div>
+  </div>
+
+  <div class="duet">
+    <figure class="mascot rv">
+      <p class="speech" id="speech">“Status 200? Aman, lanjut.”</p>
+      <img id="aoi-image" src="aoi.png" alt="Aoi-chan, maskot berambut cokelat dengan jepit kelinci dan sweater krem.">
+      <figcaption>AOI-CHAN / teman jaga request</figcaption>
+    </figure>
+
+    <figure class="app-shot rv" style="--d:.12s">
+      <figcaption>
+        <span>FLOWHIT PIXEL / workspace</span>
+        <span class="rec">● REC — kirim request_</span>
+      </figcaption>
+      <img id="app-image" src="app.png" alt="Screenshot aplikasi FLOWHIT PIXEL.">
+    </figure>
+  </div>
+
+  <div class="marquee rv" aria-hidden="true">
+    <span class="track" id="mtrack"></span>
+  </div>
+
+  <section class="section" aria-labelledby="features-title">
+    <div class="section-heading rv">
+      <h2 id="features-title">Ada alurnya. Ada serunya.</h2>
+      <span class="section-number">01 / FITUR</span>
+    </div>
+
+    <div class="features">
+      <div class="frow rv">
+        <div class="ftext">
+          <span class="feature-label">[01] FLOW</span>
+          <h3>Request jadi alur yang hidup.</h3>
+          <p>
+            Susun node request, decision, variabel, dan loop.
+            Paketnya kelihatan jalan — decision bercabang TRUE / FALSE,
+            log mengalir langsung. Ini rekaman hidupnya, bukan mockup:
+          </p>
+        </div>
+        <div class="demo rv" style="--d:.12s" aria-label="Demo animasi decision flow">
+          <p class="dtitle">FLOW / login → cek status</p>
+          <svg viewBox="0 0 460 150" role="img" aria-hidden="true">
+            <path class="fwire" d="M 115 62 H 155" />
+            <path class="fwire" d="M 275 62 H 315 L 355 30 H 395" />
+            <path class="fwire back" d="M 275 62 H 315 L 355 94 H 395" />
+            <text class="flabel tblink" x="368" y="24">T</text>
+            <text class="flabel tblink f" x="368" y="112">F</text>
+            <g><rect class="fnode" x="15" y="40" width="100" height="44" rx="10" />
+              <text class="flabel" x="65" y="58" text-anchor="middle">REQ</text>
+              <text class="fsub" x="65" y="73" text-anchor="middle">login</text></g>
+            <g><rect class="fnode" x="155" y="40" width="120" height="44" rx="10" />
+              <text class="flabel" x="215" y="58" text-anchor="middle">STATUS?</text>
+              <text class="fsub" x="215" y="73" text-anchor="middle">== 200</text></g>
+            <g><rect class="fnode" x="395" y="8" width="55" height="40" rx="10" />
+              <text class="flabel" x="422" y="33" text-anchor="middle">▶</text></g>
+            <g><rect class="fnode" x="395" y="88" width="55" height="40" rx="10" />
+              <text class="flabel" x="422" y="113" text-anchor="middle">↩</text></g>
+            <circle class="fdot" r="5" cx="0" cy="0">
+              <animateMotion dur="3s" repeatCount="indefinite" path="M 115 62 H 275 H 315 L 355 30 H 395" />
+            </circle>
+          </svg>
+          <p class="dlog">◆ [status == 200] → <span class="ok">TRUE ✓</span></p>
+        </div>
+      </div>
+
+      <div class="frow flip rv">
+        <div class="ftext">
+          <span class="feature-label">[02] KABEL 2-ARAH</span>
+          <h3>Tunggu. Baru lanjut.</h3>
+          <p>
+            Satu kabel untuk berangkat dan pulang. Loop memanggil GET Root,
+            menunggu responsnya, baru lanjut iterasi. Lihat paketnya pulang-pergi:
+          </p>
+        </div>
+        <div class="demo rv" style="--d:.12s" aria-label="Demo animasi kabel dua arah">
+          <p class="dtitle">LOOP ⇄ GET ROOT</p>
+          <svg viewBox="0 0 460 120" role="img" aria-hidden="true">
+            <path class="fwire" d="M 135 48 H 325" />
+            <path class="fwire back" d="M 325 74 H 135" />
+            <g><rect class="fnode" x="25" y="36" width="110" height="44" rx="10" />
+              <text class="flabel" x="80" y="54" text-anchor="middle">LOOP</text>
+              <text class="fsub" x="80" y="69" text-anchor="middle">×2</text></g>
+            <g><rect class="fnode" x="325" y="36" width="110" height="44" rx="10" />
+              <text class="flabel" x="380" y="54" text-anchor="middle">GET</text>
+              <text class="fsub" x="380" y="69" text-anchor="middle">200 ✓</text></g>
+            <circle class="fdot" r="5" cx="0" cy="0">
+              <animateMotion dur="2.8s" repeatCount="indefinite" path="M 135 48 H 325" />
+            </circle>
+            <circle class="fdot" r="4" cx="0" cy="0" opacity=".7">
+              <animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite" path="M 325 74 H 135" />
+            </circle>
+          </svg>
+          <p class="dlog">⇄ menunggu respons… <span class="ok">200 ✓</span> ↩ kembali</p>
+        </div>
+      </div>
+
+      <div class="frow rv">
+        <div class="ftext">
+          <span class="feature-label">[03] GAMIFIKASI</span>
+          <h3>Debug ditemani Aoi.</h3>
+          <p>
+            Tiap request mengisi Daily Quest. Beres semua, achievement kebuka.
+            Request error? Aoi ikut panik — beneran, di aplikasinya.
+          </p>
+        </div>
+        <div class="demo rv" style="--d:.12s" aria-label="Demo animasi daily quest">
+          <p class="dtitle">DAILY QUEST <span id="qcount">1/3</span></p>
+          <div class="qbar"><div class="qfill" id="qfill"></div></div>
+          <p class="dlog" id="qlog">kirim request pertama…</p>
+          <span class="badge" id="qbadge">🏆 ACHIEVEMENT: Latency Slayer</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="steps-title">
+    <div class="section-heading rv">
+      <h2 id="steps-title">Coba satu request dulu.</h2>
+      <span class="section-number">02 / MULAI</span>
+    </div>
+
+    <ol class="steps">
+      <li class="rv" style="--d:0s">
+        <h3>Unduh aplikasinya.</h3>
+        <p>Ambil versi Windows lewat tombol di atas.</p>
+      </li>
+      <li class="rv" style="--d:.1s">
+        <h3>Buka FLOWHIT PIXEL.</h3>
+        <p>Jalankan file <code>.exe</code> di Windows kamu.</p>
+      </li>
+      <li class="rv" style="--d:.2s">
+        <h3>Kirim request pertama.</h3>
+        <p>Isi URL API, pilih method, lalu tekan <code>SEND</code>.</p>
+      </li>
+    </ol>
+  </section>
+
+  <div class="closing rv">
+    <p>Gratis. Tanpa akun. Tanpa telemetri. Cuma kamu, API, dan Aoi.</p>
+    <a class="cta" href="#download">Unduh untuk Windows ↓</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>FLOWHIT PIXEL — portofolio, gratis selamanya. <span id="year"></span></span>
+    <span><a href="https://github.com/">GitHub ↗</a><a href="#">Kontak</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* scroll progress */
+  var bar = document.getElementById("progress");
+  function onScroll() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  }
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* reveal on scroll */
+  var els = document.querySelectorAll(".rv");
+  if (reduce || !("IntersectionObserver" in window)) {
+    els.forEach(function (el) { el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
+  }
+
+  /* marquee */
+  var seq = "RANGKAI REQUEST <b>•</b> JALANKAN ALURNYA <b>•</b> TIAP REQUEST, SATU QUEST <b>•</b> ";
+  document.getElementById("mtrack").innerHTML = (seq + seq + seq + seq);
+
+  /* typed tagline */
+  var phrases = ["Rangkai request. Jalankan alurnya.", "Tiap request, satu quest.", "Debug ditemani Aoi. Beres. Kerjaan kelar."];
+  var typed = document.getElementById("typed"), pi = 0, ci = 0, del = false;
+  function tick() {
+    var p = phrases[pi];
+    typed.textContent = p.slice(0, ci);
+    if (!del) {
+      ci++;
+      if (ci > p.length) { del = true; return void setTimeout(tick, 1800); }
+      setTimeout(tick, 42);
+    } else {
+      ci--;
+      if (ci < 0) { del = false; pi = (pi + 1) % phrases.length; ci = 0; return void setTimeout(tick, 350); }
+      setTimeout(tick, 18);
+    }
+  }
+  if (!reduce) tick(); else typed.textContent = phrases[0];
+
+  /* alur hidup: node nyala + speech + caption sinkron */
+  var steps = [
+    { node: "fn-start", cap: "paket berangkat dari START →", say: "“Paket jalan. Aoi pantau.”" },
+    { node: "fn-req", cap: "REQUEST dieksekusi → <span class='ok'>200 • 118ms ✓</span>", say: "“Status 200? Aman, lanjut.”" },
+    { node: "fn-end", cap: "END → respons pulang ⇄ <span class='ok'>✓</span>", say: "“FLOW 14 langkah, semua ✓.”" },
+    { node: null, cap: "quest 2/3 — <span class='ok'>satu lagi, gas</span>", say: "“Quest harian: 1/3. Gas.”" }
+  ];
+  var cap = document.getElementById("flowcap"), speech = document.getElementById("speech"), qi = 0;
+  function hot(id) {
+    ["fn-start", "fn-req", "fn-end"].forEach(function (k) {
+      var g = document.getElementById(k);
+      if (g) g.querySelector(".fnode").setAttribute("class", "fnode" + (k === id ? " hot" : ""));
+    });
+  }
+  function step() {
+    var s = steps[qi % steps.length]; qi++;
+    hot(s.node);
+    cap.innerHTML = s.cap;
+    speech.style.opacity = 0;
+    setTimeout(function () { speech.textContent = s.say; speech.style.opacity = 1; }, 280);
+  }
+  if (!reduce) { step(); setInterval(step, 2400); }
+  else { cap.innerHTML = steps[1].cap; hot("fn-req"); }
+
+  /* pixel dust */
+  try {
+    var cv = document.getElementById("dust"), ctx = cv.getContext("2d"), ps = [];
+    function size() { cv.width = innerWidth; cv.height = innerHeight; }
+    size(); addEventListener("resize", size);
+    for (var i = 0; i < (reduce ? 0 : 70); i++) ps.push({ x: Math.random(), y: Math.random(), s: Math.random() * 2 + .5, v: Math.random() * .0006 + .0002, o: Math.random() * .5 + .15 });
+    (function loop() {
+      if (reduce) return;
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.fillStyle = "#58d6b5";
+      ps.forEach(function (p) {
+        p.y -= p.v; if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+        ctx.globalAlpha = p.o;
+        ctx.fillRect(p.x * cv.width, p.y * cv.height, p.s, p.s);
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(loop);
+    })();
+  } catch (e) { /* canvas tak tersedia — lewati */ }
+
+  /* quest demo loop */
+  var qfill = document.getElementById("qfill"), qcount = document.getElementById("qcount"),
+      qlog = document.getElementById("qlog"), qbadge = document.getElementById("qbadge");
+  var qsteps = [
+    { q: "1/3", w: "33%", log: "kirim request pertama…" },
+    { q: "2/3", w: "66%", log: "POST /post → <span class='ok'>200 ✓</span>" },
+    { q: "3/3", w: "100%", log: "quest complete! 🎉", badge: true }
+  ], qqi = 0;
+  function qstep() {
+    var s = qsteps[qqi % qsteps.length]; qqi++;
+    if (qqi % qsteps.length === 1) { qbadge.classList.remove("show"); }
+    qcount.textContent = s.q; qfill.style.width = s.w; qlog.innerHTML = s.log;
+    if (s.badge) setTimeout(function () { qbadge.classList.add("show"); }, 900);
+  }
+  if (!reduce && qfill) { setInterval(qstep, 2600); }
+
+  document.getElementById("year").textContent = "· " + new Date().getFullYear();
+})();
+</script>
+
+</body>
+</html>
