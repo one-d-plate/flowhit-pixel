@@ -3,7 +3,9 @@
 API client Windows gratis + maskot yang ikut panik saat request error.
 
 🌐 **Live:** https://one-d-plate.github.io/flowhit-pixel/
-⬇️ **Unduh:** [FLOWHIT-PIXEL-Setup-2.4.0.exe](https://one-d-plate.github.io/flowhit-pixel/dl/FLOWHIT-PIXEL-Setup-2.4.0.exe) (installer ~7 MB, tanpa admin) · alternatif portable: [flowhit-pixel-windows.zip](https://one-d-plate.github.io/flowhit-pixel/dl/flowhit-pixel-windows.zip)
+⬇️ **Unduh:** [Windows (.exe installer)](https://github.com/one-d-plate/flowhit/releases/latest/download/FLOWHIT-PIXEL-Setup-2.4.0.exe) · [Mac Apple Silicon (.dmg)](https://github.com/one-d-plate/flowhit/releases/latest/download/FlowHit-Pixel-macOS-arm64.dmg) — lihat semua versi di [Releases](https://github.com/one-d-plate/flowhit/releases).
+
+> Mac: klik kanan → Open saat pertama buka (app belum notarized, Gatekeeper nanya sekali).
 
 ## Isi repo
 

@@ -67,6 +67,8 @@ h1 .glow { color: var(--mint); text-shadow: 0 0 32px rgba(88,214,181,.45); }
   position: relative; overflow: hidden; transition: transform .25s var(--spring);
 }
 .cta:hover { transform: translateY(-3px) scale(1.03); }
+.cta.ghost { background: transparent; color: var(--mint); border: 1px solid var(--mint); margin-left: 12px; }
+.cta.ghost::after { display: none; }
 .cta::after {
   content: ""; position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
   background: linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent);
@@ -188,10 +190,14 @@ footer a:hover { color: var(--mint); }
     <p class="sub rv" style="--d:.16s"><span id="typed"></span><span class="typed-caret">▌</span></p>
     <p class="small rv" style="--d:.24s">API client Windows gratis + maskot yang ikut panik saat request error.</p>
     <div class="rv" style="--d:.32s">
-      <a class="cta" id="download" href="dl/FLOWHIT-PIXEL-Setup-2.4.0.exe">
-        Unduh untuk Windows <span aria-hidden="true">↓</span>
+      <a class="cta" id="download" href="https://github.com/one-d-plate/flowhit/releases/latest/download/FLOWHIT-PIXEL-Setup-2.4.0.exe">
+        Unduh Windows <span aria-hidden="true">↓</span>
       </a>
-      <p class="requirements">installer ~7 MB · tanpa admin · source di <a href="https://github.com/one-d-plate/flowhit-pixel">GitHub ↗</a> · UI bahasa Indonesia</p>
+      <a class="cta ghost" href="https://github.com/one-d-plate/flowhit/releases/latest/download/FlowHit-Pixel-macOS-arm64.dmg">
+        Unduh Mac <span aria-hidden="true">↓</span>
+      </a>
+      <p class="requirements">installer ~7 MB · tanpa admin · source di <a href="https://github.com/one-d-plate/flowhit">GitHub ↗</a> · UI bahasa Indonesia</p>
+      <p class="requirements">Mac (Apple Silicon): file .dmg, klik kanan → Open saat pertama buka — app belum notarized Apple, jadi Gatekeeper nanya sekali.</p>
     </div>
 
     <div class="flowstrip rv" style="--d:.4s" aria-label="Animasi alur: paket bolak-balik START - REQUEST - END">
@@ -363,7 +369,8 @@ footer a:hover { color: var(--mint); }
 
   <div class="closing rv">
     <p>Gratis. Tanpa akun. Tanpa telemetri. Cuma kamu, API, dan Aoi.</p>
-    <a class="cta" href="dl/FLOWHIT-PIXEL-Setup-2.4.0.exe">Unduh untuk Windows ↓</a>
+    <a class="cta" href="https://github.com/one-d-plate/flowhit/releases/latest/download/FLOWHIT-PIXEL-Setup-2.4.0.exe">Unduh Windows ↓</a>
+    <a class="cta ghost" href="https://github.com/one-d-plate/flowhit/releases/latest/download/FlowHit-Pixel-macOS-arm64.dmg">Unduh Mac ↓</a>
   </div>
 </main>
 
